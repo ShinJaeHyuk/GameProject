@@ -6,10 +6,12 @@ public class PlayerController : MonoBehaviour
     private Stats stats;
     private Transform target;
     private float attackTimer = 0f;
-    private bool autoSkillEnabled = false;
+    private bool autoSkillEnabled = true;
+    private Skill[] skills = new Skill[2];
     void Start()
     {
-        stats = Stats.LoadStats(GameManager.CurrentSlot);
+        stats = Stats.LoadStats(GameManager.CurrentSlot);        
+        
     }
     void Update()
     {
@@ -69,6 +71,6 @@ public class PlayerController : MonoBehaviour
     }
     void UseSkill()
     {
-        // 스킬 로직 추가 예정
+       
     }
 }

@@ -49,23 +49,28 @@ public class SaveSlotMenu : MonoBehaviour
         confirmDeletePopup.SetActive(false);
     }
     void UpdateSlotUI(int slotNumber, Button slotButton)
-    {
+    {        
         string path = Application.persistentDataPath + $"/SaveSlot{slotNumber}.json";
         TextMeshProUGUI buttonText = slotButton.GetComponentInChildren<TextMeshProUGUI>();
+        RectTransform buttonRectTransform = slotButton.GetComponent<RectTransform>();
         if(File.Exists(path))
         {
             Stats stats = Stats.LoadStats(slotNumber);
             FileInfo fileInfo = new FileInfo(path);
             string creationDate = fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm");
             buttonText.text = $"Level : {stats.level}\nDate : {creationDate}";
+            // 버튼 크기 조절
+            Vector2 textSize = buttonText.GetPreferredValues();
+            buttonRectTransform.sizeDelta = new Vector2(textSize.x + 5, textSize.y);
         }
         else
         {
             {
                 buttonText.text = $"Empty Slot{slotNumber}";
+                // 버튼 크기 기존과 동일
+                buttonRectTransform.sizeDelta = new Vector2(160, 30);
             }
         }
-
     }
     void OnSlotButtonClicked(int slotNumber)
     {
