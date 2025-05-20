@@ -1,92 +1,60 @@
 using UnityEngine;
 using System.Collections.Generic;
 using PlayerData;
-public class Skill : MonoBehaviour 
+using System.Collections;
+
+public abstract class Skill : MonoBehaviour
 {
-    /*
-    private Dictionary<int, Skill> skillDictionary;
-    private Dictionary<int, float> skillCooldownTimers = new Dictionary<int, float>();
-    private Stats playerStats;
-    private Transform playerTransform;
-
-    void Start()
+    public string skillName;
+    public float damage;
+    public float cooldown;
+    public float lastUsedTime;
+    // 플레이어 위치, 타겟을 받아 스킬 실행
+    public abstract void Use(Transform playerTransform, Transform target);
+}
+// 돌진 스킬
+public class DashSkill : Skill
+{
+    public float dashDistance = 5f;
+    public float dashSpeed = 20f;
+    public override void Use(Transform playerTransform, Transform target)
     {
-        skillDictionary = Stats.LoadSkills();  // 스킬 데이터 로드
-        playerStats = Stats.LoadStats(GameManager.CurrentSlot);
-        playerTransform = transform;
-
-        // 모든 스킬의 쿨타임 초기화
-        foreach (int skillID in skillDictionary.Keys)
+        Debug.Log("Dash");
+        playerTransform.GetComponent<MonoBehaviour>().StartCoroutine(DashCoroutine(playerTransform, target));
+    }
+    private IEnumerator DashCoroutine(Transform playerTransform, Transform target)
+    {
+        if(target == null) yield break;
+        Vector2 startPos = playerTransform.position;
+        Vector2 endPos = (Vector2)transform.position;
+        Vector2 dir = (endPos - startPos).normalized;
+        float distance = 0f;
+        while(distance < dashDistance)
         {
-            skillCooldownTimers[skillID] = 0f;
+            float move = dashSpeed * Time.deltaTime;
+            playerTransform.Translate(dir * move);
+            distance += move;
+            yield return null;
         }
     }
-    void Update()
+}
+// 회전 칼날
+public class SpinningBladeSkill : Skill
+{
+    public float duration = 5f;
+    public override void Use(Transform playerTransform, Transform target)
     {
-        // 쿨타임 감소 처리
-        List<int> skillIDs = new List<int>(skillCooldownTimers.Keys);
-        foreach (int skillID in skillIDs)
+        Debug.Log("SpinningBlade");
+        GameObject bladePrefab = Resources.Load<GameObject>("SpinningBlade");
+        if(bladePrefab != null)
         {
-            if (skillCooldownTimers[skillID] > 0f)
-            {
-                skillCooldownTimers[skillID] -= Time.deltaTime;
-            }
+            GameObject blade = GameObject.Instantiate(bladePrefab, playerTransform.position, Quaternion.identity);
+            blade.transform.SetParent(playerTransform.parent);
+            GameObject.Destroy(blade, duration);
+        }
+        else
+        {
+            Debug.Log("Resources폴더에 SpinningBlade 없음");
         }
     }
-    public void UseSkill(int skillID)
-    {
-        if (!skillDictionary.ContainsKey(skillID)) return;
-        Skill skill = skillDictionary[skillID];
-
-        // 스킬 사용 가능 여부 확인
-        if (skillCooldownTimers[skillID] > 0f || !skill.unlocked) return;
-
-        // 스킬 타입에 따라 처리 분기
-        switch (skillID)
-        {
-            case 1:  // Dash Strike
-                UseDashStrike(skill);
-                break;
-            case 2:  // Spinning Blades
-                UseSpinningBlades(skill);
-                break;
-            default:
-                Debug.LogWarning($"Skill ID {skillID} is not defined.");
-                break;
-        }
-        // 스킬 쿨타임 초기화
-        skillCooldownTimers[skillID] = skill.cooldown;
-    }
-    private void UseDashStrike(Skill skill)
-    {
-        // 가장 가까운 적 찾기
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Monster");
-        GameObject closestEnemy = null;
-        float closestDistance = Mathf.Infinity;
-
-        foreach (GameObject enemy in enemies)
-        {
-            float distance = Vector2.Distance(playerTransform.position, enemy.transform.position);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                closestEnemy = enemy;
-            }
-        }
-        // 적이 범위 내에 있을 때만 돌진
-        if (closestEnemy != null && closestDistance <= skill.range)
-        {
-            Vector2 direction = (closestEnemy.transform.position - playerTransform.position).normalized;
-            playerTransform.position = closestEnemy.transform.position;
-            Debug.Log($"Dash Strike used on {closestEnemy.name}, dealt {skill.damage} damage.");
-        }
-    }
-    private void UseSpinningBlades(Skill skill)
-    {
-        // 블레이드 프리팹 생성 및 회전 시작
-        GameObject bladePrefab = Resources.Load<GameObject>("Prefabs/SpinningBlade");
-        GameObject blades = Instantiate(bladePrefab, playerTransform.position, Quaternion.identity, playerTransform);
-        blades.GetComponent<SpinningBlades>().Initialize(skill, playerStats);
-        Debug.Log("Spinning Blades activated.");
-    }*/
 }

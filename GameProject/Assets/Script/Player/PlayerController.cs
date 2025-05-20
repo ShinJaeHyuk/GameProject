@@ -1,5 +1,6 @@
 using UnityEngine;
 using PlayerData;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,9 +9,13 @@ public class PlayerController : MonoBehaviour
     private float attackTimer = 0f;
     private bool autoSkillEnabled = true;
     private Skill[] skills = new Skill[2];
+    private const float defenceConstant = 1000f; // 방어 상수
+    private float attackRange = 1.0f; // 공격 범위
+    public float distanceToTarget;
     void Start()
     {
-        stats = Stats.LoadStats(GameManager.CurrentSlot);        
+        stats = Stats.LoadStats(GameManager.CurrentSlot);
+        // 스킬 초기화
         
     }
     void Update()
@@ -44,25 +49,45 @@ public class PlayerController : MonoBehaviour
     void HandleAttack()
     {
         // 스킬 또는 일반공격
-        attackTimer -= Time.deltaTime;
+        attackTimer -= Time.deltaTime;        
+        // 공격 범위 확인
+        if(target == null) return;
+        distanceToTarget = Vector2.Distance(transform.position, target.position);        
+        if (distanceToTarget > attackRange) return;
         if (attackTimer <= 0f)
         {
-            if (autoSkillEnabled)
-            {
-                UseSkill();
-            }
-            else
-            {
-                BasicAttack();
-            }
+            BasicAttack();
+            //if (autoSkillEnabled)
+            //{
+            //    UseSkill();
+            //}
+            //else
+            //{
+            //    BasicAttack();
+            //}
             attackTimer = 1f / stats.attackSpeed;
         }
     }
+    float CalculateDamage(float atk, Stats enemy)
+    {
+        if (enemy == null) return atk;
+        // 방어율 계산
+        float defRate = enemy.defence / (enemy.defence + defenceConstant);
+        defRate *= (1f - (stats.defencePenetration / 100f));
+        // 치명타 판정
+        // 100%일 경우 반드시 치명타
+        bool isCritical = (stats.critChance >= 100f) || (Random.value < (stats.critChance / 100f));
+        float critMultiplier = isCritical ? (1f + (stats.critDmg / 100f)) : 1f;
+        // 최종 데미지
+        return atk * (1f - defRate) * critMultiplier;
+    }
     void BasicAttack()
     {
+        // 기본 공격 로직
         if (target == null) return;
-        Debug.Log("Basic attack on " + target.name);
-        // 기본 공격 로직 추가
+        // 몬스터 체력 불러오기
+        //float damage = CalculateDamage(stats.attackPower, enemyStats); // 데미지 계산
+        Debug.LogFormat("Distance : {0}, Basic attack on {1}", distanceToTarget, target.name);        
     }
     public void ToggleAutoSkill()
     {
@@ -71,6 +96,15 @@ public class PlayerController : MonoBehaviour
     }
     void UseSkill()
     {
-       
+        for(int i = 0; i < skills.Length; i++)
+        {
+            if(Time.time >= skills[i].lastUsedTime + skills[i].cooldown)
+            {
+                skills[i].Use(transform, target);
+                skills[i].lastUsedTime = Time.time;
+                break;
+            }
+        }           
     }
+    
 }

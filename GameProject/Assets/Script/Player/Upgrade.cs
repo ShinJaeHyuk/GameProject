@@ -13,12 +13,23 @@ public class Upgrade : MonoBehaviour
     {
         int cost = 100;  // 임시 비용
         if (stats.gold < cost) return;
+        bool isLockedStat = statName == "CritChance" || statName == "CritDamage" ||
+                            statName == "DefencePenetration";
+        if (isLockedStat && stats.isGoldUpgradeUnlock)
+        {
+            Debug.Log($"{statName} is locked.");
+            return;
+        }
         stats.gold -= cost;
         switch (statName)
         {
             case "AttackPower":
                 stats.attackPower += 2f;
                 stats.attackPowerUpgradeLevel++;
+                if(stats.attackPowerUpgradeLevel >= 50)
+                {
+                    stats.isGoldUpgradeUnlock = true;
+                }
                 break;
             case "Defense":
                 stats.defence += 2f;
@@ -34,17 +45,17 @@ public class Upgrade : MonoBehaviour
                 stats.moveSpeed += 0.2f;
                 break;
             case "CritChance":
-                if (stats.attackPowerUpgradeLevel >= 50) stats.critChance += 0.02f;
+                stats.critChance += 0.02f;
                 break;
             case "CritDamage":
-                if (stats.attackPowerUpgradeLevel >= 50) stats.critDmg += 0.1f;
+                stats.critDmg += 0.1f;
                 break;
             case "DefencePenetration":
-                if (stats.attackPowerUpgradeLevel >= 50) stats.defencePenetration += 1f;
+                stats.defencePenetration += 1f;
                 break;
             default:
                 break;
-        }
+        }        
         stats.SaveStats(GameManager.CurrentSlot);
         Debug.Log($"{statName} upgraded. Remaining Gold: {stats.gold}");
     }
