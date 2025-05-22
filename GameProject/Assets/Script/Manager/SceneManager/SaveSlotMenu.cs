@@ -97,7 +97,7 @@ public class SaveSlotMenu : MonoBehaviour
             {
                 SaveManager.CreateNewSaveData(slotNumber);
             }
-            GameManager.CurrentSlot = slotNumber;
+            GameManager.SetSlot(slotNumber);
             SceneManager.LoadScene("PlayScene");
         }
     }

@@ -1,9 +1,11 @@
 using UnityEngine;
 using PlayerData;
 using System.Collections.Generic;
+using MonsterData;
 
 public class PlayerController : MonoBehaviour
 {
+    private Monster monster;
     private Stats stats;
     private Transform target;
     private float attackTimer = 0f;
@@ -68,11 +70,11 @@ public class PlayerController : MonoBehaviour
             attackTimer = 1f / stats.attackSpeed;
         }
     }
-    float CalculateDamage(float atk, Stats enemy)
+    float CalculateDamage(float atk, MonsterStats enemy)
     {
         if (enemy == null) return atk;
         // 방어율 계산
-        float defRate = enemy.defence / (enemy.defence + defenceConstant);
+        float defRate = enemy.monsterDef / (enemy.monsterDef + defenceConstant);
         defRate *= (1f - (stats.defencePenetration / 100f));
         // 치명타 판정
         // 100%일 경우 반드시 치명타
@@ -85,9 +87,15 @@ public class PlayerController : MonoBehaviour
     {
         // 기본 공격 로직
         if (target == null) return;
+        Monster monsterComponent = target.GetComponent<Monster>();
+        if(monsterComponent == null) return;
         // 몬스터 체력 불러오기
-        //float damage = CalculateDamage(stats.attackPower, enemyStats); // 데미지 계산
-        Debug.LogFormat("Distance : {0}, Basic attack on {1}", distanceToTarget, target.name);        
+        MonsterStats enemyStats = monsterComponent.stats;
+        // 데미지 계산
+        float damage = CalculateDamage(stats.attackPower, enemyStats);
+        // 실제 데미지 적용
+        monsterComponent.TakeDamage(damage);
+        Debug.LogFormat($"{target.name}에게 {damage}의 데미지 입힘");        
     }
     public void ToggleAutoSkill()
     {
@@ -106,5 +114,13 @@ public class PlayerController : MonoBehaviour
             }
         }           
     }
-    
+    public void TakeDamage(float damage)
+    {
+        stats.currentHp -= damage;
+        Debug.Log($"player took {damage} damage. HP left : {stats.currentHp}");
+        if(stats.currentHp < 0)
+        {
+            Debug.Log($"player died");
+        }
+    }
 }

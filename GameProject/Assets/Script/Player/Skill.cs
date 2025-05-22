@@ -45,7 +45,7 @@ public class SpinningBladeSkill : Skill
     public override void Use(Transform playerTransform, Transform target)
     {
         Debug.Log("SpinningBlade");
-        GameObject bladePrefab = Resources.Load<GameObject>("SpinningBlade");
+        GameObject bladePrefab = Resources.Load<GameObject>("Prefab/SpinningBlade");
         if(bladePrefab != null)
         {
             GameObject blade = GameObject.Instantiate(bladePrefab, playerTransform.position, Quaternion.identity);

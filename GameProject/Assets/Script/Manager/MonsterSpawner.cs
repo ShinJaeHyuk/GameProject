@@ -25,7 +25,6 @@ public class MonsterSpawner : MonoBehaviour
         for (int i = 1; i < lines.Length; i++) // 첫 줄은 헤더
         {
             string[] lineData = lines[i].Split(',');            
-            //if (lineData.Length < 11) continue;
             Debug.Log(lineData[1]);           
             string monsterName = lineData[1]; // 이름 = 프리팹 이름            
             monsterList.Add(new MonsterCSVData
