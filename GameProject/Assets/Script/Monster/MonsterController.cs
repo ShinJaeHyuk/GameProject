@@ -53,7 +53,7 @@ public class MonsterController : MonoBehaviour
     float CalculateDamage()
     {
         // 스탯 불러오기
-        var playerStats = PlayerData.Stats.LoadStats(GameManager.CurrentSlot);
+        var playerStats = PlayerData.Stats.LoadStats(GameManager.currentSlot);
         // 방어율 계산
         float defRate = playerStats.defence / (playerStats.defence + defenceConstant);
         defRate *= (1f - (monster.stats.monsterDefencePenetration / 100f));

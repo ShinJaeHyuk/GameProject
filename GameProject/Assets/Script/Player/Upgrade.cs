@@ -7,7 +7,7 @@ public class Upgrade : MonoBehaviour
 
     void Start()
     {
-        stats = Stats.LoadStats(GameManager.CurrentSlot);
+        stats = Stats.LoadStats(GameManager.currentSlot);
     }
     public void UpgradeStat(string statName)
     {
@@ -56,7 +56,7 @@ public class Upgrade : MonoBehaviour
             default:
                 break;
         }        
-        stats.SaveStats(GameManager.CurrentSlot);
+        stats.SaveStats(GameManager.currentSlot);
         Debug.Log($"{statName} upgraded. Remaining Gold: {stats.gold}");
     }
 }

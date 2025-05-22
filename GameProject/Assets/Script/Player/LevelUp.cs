@@ -7,7 +7,7 @@ public class LevelUp : MonoBehaviour
 
     void Start()
     {
-        stats = Stats.LoadStats(GameManager.CurrentSlot);
+        stats = Stats.LoadStats(GameManager.currentSlot);
     }
     public void GainExp(int amount)
     {
@@ -18,7 +18,7 @@ public class LevelUp : MonoBehaviour
             stats.level++;
             stats.statPoints++;
             stats.expToNextLevel = Mathf.RoundToInt(stats.expToNextLevel * 1.2f);
-            stats.SaveStats(GameManager.CurrentSlot);
+            stats.SaveStats(GameManager.currentSlot);
             Debug.Log("Level Up! New Level: " + stats.level);
         }
     }
@@ -78,7 +78,7 @@ public class LevelUp : MonoBehaviour
                 Debug.Log("Invalid stat name.");
                 return;
         }
-        stats.SaveStats(GameManager.CurrentSlot);
+        stats.SaveStats(GameManager.currentSlot);
         Debug.Log($"{statName} upgraded using stat point. Remaining Points: {stats.statPoints}");
     }
 }

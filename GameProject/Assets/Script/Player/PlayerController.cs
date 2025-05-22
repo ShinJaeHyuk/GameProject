@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public float distanceToTarget;
     void Start()
     {
-        stats = Stats.LoadStats(GameManager.CurrentSlot);
+        stats = Stats.LoadStats(GameManager.currentSlot);
         // 스킬 초기화
         
     }
