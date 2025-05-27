@@ -11,7 +11,7 @@ namespace PlayerData
     public class Stats
     {
         // 공격 및 방어 관련
-        public float attackPower = 10.0f; // 공격력
+        public float attackPower = 50.0f; // 공격력
         public float defence = 5.0f; // 방어력
         public float currentHp; // 현재 체력
         public float maxHp = 100.0f; // 체력
@@ -27,8 +27,8 @@ namespace PlayerData
         public int level = 1; // 플레이어 레벨
         public int statPoints = 0; // 스탯포인트
         public int exp = 0; // 경험치
-        public int expToNextLevel = 100; // 임시값(csv에서 파싱 예정)
-        public int gold = 0;
+        public int expToNextLevel = 30; // 임시값(csv에서 파싱 예정)
+        public int gold = 0; // 골드
         // 업그레이드 해금 여부
         public bool isStatUpgradeUnlock = false; // 스탯 업그레이드 해금 여부
         public bool isGoldUpgradeUnlock = false; // 골드 업그레이드 해금 여부

@@ -117,10 +117,10 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(float damage)
     {
         stats.currentHp -= damage;
-        Debug.Log($"player took {damage} damage. HP left : {stats.currentHp}");
-        if(stats.currentHp < 0)
+        //Debug.Log($"player took {damage} damage. HP left : {stats.currentHp}");
+        if(stats.currentHp <= 0)
         {
-            Debug.Log($"player died");
+            //Debug.Log($"player died");
         }
     }
 }

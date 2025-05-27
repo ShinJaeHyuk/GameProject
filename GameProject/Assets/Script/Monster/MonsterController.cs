@@ -81,7 +81,7 @@ public class MonsterController : MonoBehaviour
             return;
         }
         GameObject projectile = Instantiate(bullet, firePoint.position, Quaternion.identity);
-        Vector2 direction = (player.position - transform.position).normalized;
+        Vector2 direction = (transform.position - player.position).normalized;
         projectile.GetComponent<Projectile>().Init(direction, damage);
     }
 }
