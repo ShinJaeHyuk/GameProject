@@ -9,10 +9,10 @@ namespace MonsterData
         public int monsterID;
         public string monsterName;
         public string monsterType;
-        public float monsterCurrentHp;
-        public float monsterMaxHp;
-        public float monsterAtk;
-        public float monsterDef;
+        public int monsterCurrentHp;
+        public int monsterMaxHp;
+        public int monsterAtk;
+        public int monsterDef;
         public float monsterCritChance;
         public float monsterCritDmg;
         public float monsterDefencePenetration;
@@ -25,9 +25,9 @@ namespace MonsterData
             monsterID = int.Parse(data[0]);
             monsterName = data[1];
             monsterType = data[2];
-            monsterMaxHp = float.Parse(data[3]);
-            monsterAtk = float.Parse(data[4]);
-            monsterDef = float.Parse(data[5]);
+            monsterMaxHp = int.Parse(data[3]);
+            monsterAtk = int.Parse(data[4]);
+            monsterDef = int.Parse(data[5]);
             monsterCritChance = float.Parse(data[6]);
             monsterCritDmg = float.Parse(data[7]);
             monsterDefencePenetration = float.Parse(data[8]);

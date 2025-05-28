@@ -11,10 +11,10 @@ namespace PlayerData
     public class Stats
     {
         // 공격 및 방어 관련
-        public float attackPower = 50.0f; // 공격력
-        public float defence = 5.0f; // 방어력
-        public float currentHp; // 현재 체력
-        public float maxHp = 100.0f; // 체력
+        public int attackPower = 50; // 공격력
+        public int defence = 5; // 방어력
+        public int currentHp; // 현재 체력
+        public int maxHp = 100; // 체력
         public float attackSpeed = 1.0f; // 공격속도
         public float moveSpeed = 1.0f;
         public float critChance = 0.0f; // 치명타 확률

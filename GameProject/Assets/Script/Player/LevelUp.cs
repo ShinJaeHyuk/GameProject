@@ -41,7 +41,7 @@ public class LevelUp : MonoBehaviour
         switch (statName)
         {
             case "AttackPower":
-                stats.attackPower += 2f;
+                stats.attackPower += 2;
                 stats.attackPowerStatPoint++;
                 // 공격력 스탯 포인트가 50 이상이면 잠금 해제
                 if (stats.attackPowerStatPoint >= 50)
@@ -50,10 +50,10 @@ public class LevelUp : MonoBehaviour
                 }
                 break;
             case "Defense":
-                stats.defence += 2f;
+                stats.defence += 2;
                 break;
             case "MaxHealth":
-                stats.maxHp += 20f;
+                stats.maxHp += 20;
                 stats.currentHp = stats.maxHp;
                 break;
             case "AttackSpeed":

@@ -24,7 +24,7 @@ public class Upgrade : MonoBehaviour
         switch (statName)
         {
             case "AttackPower":
-                stats.attackPower += 2f;
+                stats.attackPower += 2;
                 stats.attackPowerUpgradeLevel++;
                 if(stats.attackPowerUpgradeLevel >= 50)
                 {
@@ -32,10 +32,10 @@ public class Upgrade : MonoBehaviour
                 }
                 break;
             case "Defense":
-                stats.defence += 2f;
+                stats.defence += 2;
                 break;
             case "MaxHealth":
-                stats.maxHp += 20f;
+                stats.maxHp += 20;
                 stats.currentHp = stats.maxHp;
                 break;
             case "AttackSpeed":

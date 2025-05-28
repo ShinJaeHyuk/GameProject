@@ -9,12 +9,15 @@ public class MonsterController : MonoBehaviour
     private const float defenceConstant = 1000f; // 방어 상수
     private GameObject bullet;
     private Transform firePoint;
-
+    private float moveSpeed = 2.0f;
+    private float spawnDelay = 1.5f;
+    private float spawnTimer = 0f;
+    private bool canMove = false;
     void Start()
     {
-        monster = GetComponent<Monster>();
-        player = GameObject.FindWithTag("Player").transform;
-        if(monster.stats.monsterType == "Range")
+        monster = GetComponent<Monster>();        
+        player = GameObject.FindWithTag("Player").transform;        
+        if (monster.stats.monsterType == "Range")
         {
             firePoint = transform.Find("FirePoint");
             if (firePoint == null) Debug.LogWarning("There is no Firepoint");
@@ -24,20 +27,29 @@ public class MonsterController : MonoBehaviour
     }
     void Update()
     {
+        if (!canMove)
+        {
+            spawnTimer += Time.deltaTime;
+            if (spawnTimer > spawnDelay)
+            {
+                canMove = true;
+            }
+            return;
+        }
         if (player == null) return;
-        float distance = Vector2.Distance(transform.position, player.position);
+        float distance = Vector2.Distance(transform.position, player.position);        
         float range = monster.stats.monsterType == "range" ? 5f : 1.5f;
         if (distance > range)
-        {
+        {            
             Vector2 direction = (player.position - transform.position).normalized;
-            transform.Translate(direction * monster.stats.monsterDef * Time.deltaTime); // 이동속도는 monsterDef 대체 가능
+            transform.Translate(direction * moveSpeed * Time.deltaTime); // 이동속도는 moveSpeed로 고정                        
         }
         else
         {
             attackTimer += Time.deltaTime;
-            if (attackTimer >= 1f / monster.stats.monsterDef) 
+            if (attackTimer >= 2f) 
             {
-                float damage = CalculateDamage(); // 데미지 계산
+                int damage = CalculateDamage(); // 데미지 계산
                 if(monster.stats.monsterType == "Range")
                 {
                     ShootProjectile(damage);
@@ -50,7 +62,7 @@ public class MonsterController : MonoBehaviour
             }
         }
     }
-    float CalculateDamage()
+    int CalculateDamage()
     {
         // 스탯 불러오기
         var playerStats = PlayerData.Stats.LoadStats(GameManager.currentSlot);
@@ -61,10 +73,10 @@ public class MonsterController : MonoBehaviour
         bool isCritical = (monster.stats.monsterCritChance >= 100f) || (Random.value < (monster.stats.monsterCritChance / 100f));
         float critMultiplier = isCritical ? (1f + (monster.stats.monsterCritDmg / 100f)) : 1f;
         // 최종 데미지 계산
-        float damage = monster.stats.monsterAtk * (1f - defRate) * critMultiplier;
+        int damage = (int)(monster.stats.monsterAtk * (1f - defRate) * critMultiplier);
         return damage;        
     }
-    void AttackPlayer(float damage)
+    void AttackPlayer(int damage)
     {
         GameObject playerObj = GameObject.FindWithTag("Player");
         if (playerObj == null) return;
@@ -72,7 +84,7 @@ public class MonsterController : MonoBehaviour
         if(playerController == null) return;
         playerController.TakeDamage(damage);
     }
-    void ShootProjectile(float damage)
+    void ShootProjectile(int damage)
     {
         if (firePoint == null) firePoint = transform.Find("FirePoint");
         if (firePoint == null)
@@ -80,8 +92,7 @@ public class MonsterController : MonoBehaviour
             Debug.LogWarning("FirePoint not found");
             return;
         }
-        GameObject projectile = Instantiate(bullet, firePoint.position, Quaternion.identity);
-        Vector2 direction = (transform.position - player.position).normalized;
-        projectile.GetComponent<Projectile>().Init(direction, damage);
+        GameObject projectile = Instantiate(bullet, firePoint.position, Quaternion.identity);        
+        projectile.GetComponent<Projectile>().Init(player, damage);
     }
 }

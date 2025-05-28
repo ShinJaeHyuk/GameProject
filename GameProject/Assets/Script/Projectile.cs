@@ -4,25 +4,30 @@ public class Projectile : MonoBehaviour
 {
     private Vector2 direction;
     private float moveSpeed = 2.0f;
-    private float damage;
+    private int damage;
     private Transform player;
     private float maxDistance = 10.0f;
     private float traveledDistance = 0.0f;
     private float hitDistance = 0.5f; // 플레이어에게 도달했다고 판단할 거리
-    public void Init(Vector2 direction, float damage)
+    public void Init(Transform target, int damage)
     {
-        this.direction = direction.normalized;
+        this.player = target;
         this.damage = damage;
-        player = GameObject.FindWithTag("Player")?.transform;
-        if (player == null)
+        if (player != null)
         {
-            Debug.LogWarning("no player");            
+            direction = ((Vector2)(player.position - transform.position)).normalized;
         }
+        else
+        {
+            Debug.LogWarning("No player Found");
+            direction = Vector2.right;
+        }
+        transform.rotation = Quaternion.AngleAxis(Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg, Vector3.forward);
     }    
     void Update()
     {
         float moveDistance = moveSpeed * Time.deltaTime;
-        transform.Translate(direction * moveDistance);
+        transform.Translate(direction * moveDistance, Space.World);
         traveledDistance += moveDistance;
         if (player != null)
         {
