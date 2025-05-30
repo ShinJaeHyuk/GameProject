@@ -24,6 +24,7 @@ public class MonsterController : MonoBehaviour
         }
         bullet = Resources.Load<GameObject>("Prefab/Bullet");
         if (bullet == null) Debug.LogWarning("No bullet");
+        Debug.Log($"{monster.stats.monsterName}의 최초 위치 : {monster.transform.position}");
     }
     void Update()
     {
